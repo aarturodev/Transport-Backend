@@ -1,17 +1,20 @@
 import { ExpedienteModel } from '../models/expediente.model.js';
+import jwt from 'jsonwebtoken';
 
 export class ExpedienteController {
 
      static async getMotivoInvestigacion(req, res) {
+               
+               try{
+                    const result = await ExpedienteModel.getMotivoInvestigacion();
+                    res.json(result);
+               }
+               catch(error){
+                    console.error("este es el error: ",error);
+                    return res.status(500).json({ message: 'Internal server error' });
 
-          try{
-               const result = await ExpedienteModel.getMotivoInvestigacion();
-               res.json(result);
-          }
-          catch(error){
-               console.error("este es el error: ",error);
-               return res.status(500).json({ message: 'Internal server error' });
-          }
+               }
+         
 
      }
 

@@ -4,7 +4,7 @@ const sqlConfig = {
   user: "Anderson",
   password: "administrador",
   server: "ANDERSON-PC",
-  database: "Tpublico",
+  database: "TransportePublico",
   pool: {
     max: 10,
     min: 0,

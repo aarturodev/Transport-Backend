@@ -5,9 +5,8 @@ export class ExpedienteModel {
     static async getMotivoInvestigacion() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Motivo_Investigacion';
+        const query = 'SELECT Id, Descripcion FROM Motivo_Investigacion';
         const result = await pool.query(query);
-        pool.close();
         return result.recordset;
           
 
@@ -16,9 +15,8 @@ export class ExpedienteModel {
       static async getConducta() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Clase_Infraccion';
+        const query = 'SELECT Id, Descripcion FROM Clase_Infraccion';
         const result = await pool.query(query);
-        pool.close();
         return result.recordset;
 
      }
@@ -26,9 +24,8 @@ export class ExpedienteModel {
      static async getModalidadServicio() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Modalidad_Servicio';
+        const query = 'SELECT Id, Descripcion FROM Modalidad_Servicio';
         const result = await pool.query(query);
-        pool.close();
         return result.recordset;
 
      }
@@ -36,9 +33,8 @@ export class ExpedienteModel {
      static async getTipoServicio() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Tipo_Servicio';
+        const query = 'SELECT Id, Descripcion FROM Tipo_Servicio';
         const result = await pool.query(query);
-        pool.close();
         console.log(result.recordset);
         return result.recordset;
 
@@ -47,9 +43,8 @@ export class ExpedienteModel {
      static async getSujetoSancionable() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Sujeto_Sancionable';
+        const query = 'SELECT Id, Descripcion FROM Sujeto_Sancionable';
         const result = await pool.query(query);
-        pool.close();
         return result.recordset; 
 
      }
@@ -57,9 +52,8 @@ export class ExpedienteModel {
      static async getTipoPersonaNatural() {
 
         const pool = await getConnection();
-        const query = 'SELECT * FROM Tipo_Persona_Natural';
+        const query = 'SELECT Id, Descripcion FROM Tipo_Persona_Natural';
         const result = await pool.query(query);
-        pool.close();
         return result.recordset;
 
      }
