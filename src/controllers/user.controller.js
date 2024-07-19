@@ -15,11 +15,16 @@ export class UserController {
                const SECRET_KEY = process.env.SECRET_KEY;
                const SECRET_KEY_REFRESH = process.env.SECRET_KEY_REFRESH;
 
-               const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '30s' });
+               const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' });
                const refreshToken = jwt.sign({ user }, SECRET_KEY_REFRESH);
               
                return res
-               .cookie('refreshToken', refreshToken,{ httpOnly: true})
+               .cookie('refreshToken', refreshToken,{
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    secure: process.env.NODE_ENV === 'production' ? true : false, 
+                    priority: 'high'
+               })
                .json({token});
           
           }
@@ -30,7 +35,7 @@ export class UserController {
 
      }
 
-     static async logout(_req, res) {
+     static async logout(req, res) {
           res.clearCookie('refreshToken');
           return res.json({ message: 'Logged out' });
      }
@@ -48,7 +53,7 @@ export class UserController {
                if(err){
                     return res.status(401).json({ message: 'Refresh token expiro' });
                }
-               const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '30s' });
+               const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' });
               
                return res.json({ token });
           });

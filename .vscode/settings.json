@@ -1,0 +1,10 @@
+{
+     "workbench.preferredDarkColorTheme": "One Dark Pro Darker",
+     "workbench.preferredHighContrastColorTheme": "One Dark Pro Darker",
+     "workbench.preferredHighContrastLightColorTheme": "One Dark Pro Darker",
+     "workbench.preferredLightColorTheme": "One Dark Pro Darker",
+     "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
+     "terminal.integrated.confirmOnExit": "never",
+     "terminal.integrated.fontSize": 24,
+     "terminal.integrated.fontFamily": ""
+}
