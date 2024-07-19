@@ -12,5 +12,9 @@ router.get('/modalidad-servicio', ExpedienteController.getModalidadServicio);
 router.get('/tipo-servicio', ExpedienteController.getTipoServicio);
 router.get('/sujeto-sancionable', ExpedienteController.getSujetoSancionable);
 router.get('/tipo-persona-natural', ExpedienteController.getTipoPersonaNatural);
+//router.get('/:id', ExpedienteController.getExpedienteById);
+router.get('/:expediente', ExpedienteController.buscarExpediente);
+
+router.post('/crear-expediente', ExpedienteController.createExpediente);
 
 export default router;

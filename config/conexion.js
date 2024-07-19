@@ -4,7 +4,7 @@ const sqlConfig = {
   user: "Anderson",
   password: "administrador",
   server: "ANDERSON-PC",
-  database: "TransportePublico",
+  database: "T_Publico",
   pool: {
     max: 10,
     min: 0,
@@ -17,7 +17,7 @@ const sqlConfig = {
     }
 }
 
-export async function getConnection() {
+async function getConnection() {
   try {
     const pool = await mssql.connect(sqlConfig);
     if (pool) {
@@ -29,3 +29,5 @@ export async function getConnection() {
     
   }
 }
+
+export {getConnection, mssql}

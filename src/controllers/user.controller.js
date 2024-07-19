@@ -15,7 +15,7 @@ export class UserController {
                const SECRET_KEY = process.env.SECRET_KEY;
                const SECRET_KEY_REFRESH = process.env.SECRET_KEY_REFRESH;
 
-               const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' });
+               const token = jwt.sign({ user }, SECRET_KEY);
                const refreshToken = jwt.sign({ user }, SECRET_KEY_REFRESH);
               
                return res
@@ -38,6 +38,23 @@ export class UserController {
      static async logout(req, res) {
           res.clearCookie('refreshToken');
           return res.json({ message: 'Logged out' });
+     }
+
+     static async register(req, res) {
+          const { username, password } = req.body;
+
+          try{
+               const user = await UserModel.register(username, password);
+               if(!user){
+                    return res.status(400).send({ message: 'User already exists' });
+               }
+               return res.json({ message: 'User created' });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     
      }
 
      static async refreshToken(req, res) {

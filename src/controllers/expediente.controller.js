@@ -1,5 +1,5 @@
 import { ExpedienteModel } from '../models/expediente.model.js';
-import jwt from 'jsonwebtoken';
+
 
 export class ExpedienteController {
 
@@ -14,8 +14,6 @@ export class ExpedienteController {
                     return res.status(500).json({ message: 'Internal server error' });
 
                }
-         
-
      }
 
       static async getConducta(req, res) {
@@ -28,7 +26,6 @@ export class ExpedienteController {
                console.error("este es el error: ",error);
                return res.status(500).json({ message: 'Internal server error' });
           }
-
      }
 
      static async getModalidadServicio(req, res) {
@@ -82,6 +79,62 @@ export class ExpedienteController {
           }
 
      }
+
+     static async createExpediente(req, res) {
+          try{
+               console.log(req.body);
+               
+               const {Numero_Expediente} = req.body
+               const exist = await ExpedienteModel.verificarExistencia(Numero_Expediente)
+          
+               if(exist){
+                    return res.json({message : 'El expediente ya existe'})
+               }
+
+               const result = await ExpedienteModel.createExpediente(req.body);
+
+               if(!result){
+                    return res.json({ message: 'No se pudo crear el expediente' });
+               }
+
+               return res.status(201).json({message: 'Expediente creado', result});
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async getExpedienteById(req, res) {
+          try{
+               console.log(req.params.id );
+               const result = await ExpedienteModel.getExpedienteById(req.params.id);
+               if(!result){
+                    return res.status(404).json({ message: 'Expediente no encontrado' });
+               }
+               res.json({ message: 'Expediente encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarExpediente(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarExpediente(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Expediente no encontrado' });
+               }
+               res.json({ message: 'Expediente encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+    
 
     
      
