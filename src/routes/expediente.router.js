@@ -12,9 +12,39 @@ router.get('/modalidad-servicio', ExpedienteController.getModalidadServicio);
 router.get('/tipo-servicio', ExpedienteController.getTipoServicio);
 router.get('/sujeto-sancionable', ExpedienteController.getSujetoSancionable);
 router.get('/tipo-persona-natural', ExpedienteController.getTipoPersonaNatural);
-//router.get('/:id', ExpedienteController.getExpedienteById);
-router.get('/:expediente', ExpedienteController.buscarExpediente);
+router.get('/sentido-fallo', ExpedienteController.getSentidoFallo);
+router.get('/decision', ExpedienteController.getDecision);
+router.get('/decision-segunda-instancia', ExpedienteController.getDecisionSegundaInstancia);
+router.get('/tipo-recurso', ExpedienteController.getTipoRecurso);
+router.get('/recurso-primera-instancia/:expediente', ExpedienteController.buscarRecursoPrimeraInstancia);
+router.get('/recurso-segunda-instancia/:expediente', ExpedienteController.buscarRecursoSegundaInstancia);
+router.get('/rec-queja-revocatoria', ExpedienteController.getRecQuejaRevocatoria);
+router.get('/des-queja-revocatoria', ExpedienteController.getDecisionQuejaRevocatoria);
+router.get('/tipo-resolucion', ExpedienteController.getTipoResolucion);
+router.get('/ajuste-derecho-aclaratorio/:expediente', ExpedienteController.buscarAjusteDerAclaratorio);
 
-router.post('/crear-expediente', ExpedienteController.createExpediente);
+router.get('/:expediente', ExpedienteController.buscarExpediente); //buscar expediente por Numero de expediente
+router.get("/apertura/:expediente", ExpedienteController.buscarApertura); //buscar apertura por Numero de expediente
+router.get("/inhibitorio/:expediente", ExpedienteController.buscarInhibitorio);
+router.get("/pruebas/:expediente", ExpedienteController.buscarPruebas);
+router.get("/aceptacion-cargos/:expediente", ExpedienteController.buscarAceptacionCargos);
+router.get("/fallo/:expediente", ExpedienteController.buscarFallo);
+router.get("/queja-revocatoria/:expediente", ExpedienteController.buscarRecQuejaRevocatoria);
+router.get('/ejecutoria/:expediente', ExpedienteController.buscarEjecutoria);
+router.get('/gestion-cobro/:expediente', ExpedienteController.buscarGestionCobro);
+
+router.post('/crear-expediente', ExpedienteController.createExpediente); //crear expediente
+router.patch("/actualizar-expediente", ExpedienteController.actualizarExpediente); //actualizar expediente
+router.patch("/actualizar-apertura", ExpedienteController.actualizarApertura); //actualizar apertura
+router.patch("/actualizar-inhibitorio", ExpedienteController.actualizarInhibitorio); //actualizar inhibitorio
+router.patch("/actualizar-pruebas", ExpedienteController.actualizarPruebas); //actualizar pruebas
+router.patch("/actualizar-aceptacion-cargos", ExpedienteController.actualizarAceptacionCargos); //actualizar aceptacion de cargos
+router.patch("/actualizar-fallo", ExpedienteController.actualizarFallo); //actualizar fallo
+router.patch("/actualizar-recurso-primera-instancia", ExpedienteController.actualizarRecursoPrimeraInstancia); //actualizar recurso
+router.patch("/actualizar-recurso-segunda-instancia", ExpedienteController.actualizarRecursoSegundaInstancia); //actualizar recurso
+router.patch("/actualizar-queja-revocatoria", ExpedienteController.actualizarRecQuejaRevocatoria); //actualizar queja revocatoria
+router.patch("/actualizar-ejecutoria", ExpedienteController.actualizarEjecutoria); //actualizar ejecutoria
+router.patch("/actualizar-gestion-cobro", ExpedienteController.actualizarGestionCobro); //actualizar gestion de cobro
+router.patch("/actualizar-ajuste-derecho-aclaratorio", ExpedienteController.actualizarAjusteDerAclaratorio); //actualizar ajuste derecho aclaratorio
 
 export default router;
