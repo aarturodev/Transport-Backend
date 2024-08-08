@@ -122,6 +122,17 @@ export class ExpedienteController {
           }
      }
 
+     static async getExpediente(req, res) {
+          try{
+               const result = await ExpedienteModel.getExpediente(req.params.expediente);
+               res.json(result);
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
      static async actualizarExpediente(req, res) {
           try{
                const result = await ExpedienteModel.actualizarExpediente(req.body);
@@ -537,6 +548,66 @@ export class ExpedienteController {
                     return res.status(404).json({ message: 'Ajuste Derecho Aclaratorio no encontrado' });
                }
                return res.json({ message: 'Ajuste Derecho Aclaratorio actualizado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarEstado(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarEstado(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Estado no encontrado' });
+               }
+               res.json({ message: 'Estado encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarEstado(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarEstado(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Estado no encontrado' });
+               }
+               return res.json({ message: 'Estado actualizado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarAsignacion(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarAsignacion(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Asignacion no encontrada' });
+               }
+               res.json({ message: 'Asignacion encontrada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarAsignacion(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarAsignacion(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Asignacion no encontrada' });
+               }
+               return res.json({ message: 'Asignacion actualizada', result });
           }
           catch(error){
                console.error("este es el error: ",error);

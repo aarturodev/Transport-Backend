@@ -24,6 +24,7 @@ router.get('/tipo-resolucion', ExpedienteController.getTipoResolucion);
 router.get('/ajuste-derecho-aclaratorio/:expediente', ExpedienteController.buscarAjusteDerAclaratorio);
 
 router.get('/:expediente', ExpedienteController.buscarExpediente); //buscar expediente por Numero de expediente
+router.get("/tabla/:expediente", ExpedienteController.getExpediente); //buscar estado de expediente por Numero de expediente
 router.get("/apertura/:expediente", ExpedienteController.buscarApertura); //buscar apertura por Numero de expediente
 router.get("/inhibitorio/:expediente", ExpedienteController.buscarInhibitorio);
 router.get("/pruebas/:expediente", ExpedienteController.buscarPruebas);
@@ -32,6 +33,8 @@ router.get("/fallo/:expediente", ExpedienteController.buscarFallo);
 router.get("/queja-revocatoria/:expediente", ExpedienteController.buscarRecQuejaRevocatoria);
 router.get('/ejecutoria/:expediente', ExpedienteController.buscarEjecutoria);
 router.get('/gestion-cobro/:expediente', ExpedienteController.buscarGestionCobro);
+router.get('/estado/:expediente', ExpedienteController.buscarEstado);
+router.get('/asignacion/:expediente', ExpedienteController.buscarAsignacion);
 
 router.post('/crear-expediente', ExpedienteController.createExpediente); //crear expediente
 router.patch("/actualizar-expediente", ExpedienteController.actualizarExpediente); //actualizar expediente
@@ -46,5 +49,7 @@ router.patch("/actualizar-queja-revocatoria", ExpedienteController.actualizarRec
 router.patch("/actualizar-ejecutoria", ExpedienteController.actualizarEjecutoria); //actualizar ejecutoria
 router.patch("/actualizar-gestion-cobro", ExpedienteController.actualizarGestionCobro); //actualizar gestion de cobro
 router.patch("/actualizar-ajuste-derecho-aclaratorio", ExpedienteController.actualizarAjusteDerAclaratorio); //actualizar ajuste derecho aclaratorio
+router.patch("/actualizar-estado", ExpedienteController.actualizarEstado); //actualizar estado expediente
+router.patch("/actualizar-asignacion", ExpedienteController.actualizarAsignacion); //actualizar asignacion expediente
 
 export default router;

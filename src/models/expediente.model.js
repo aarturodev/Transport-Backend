@@ -467,7 +467,22 @@ export class ExpedienteModel {
 
      static async buscarExpediente(expediente){
             const pool = await getConnection();
-            const query = 'SELECT * FROM Expediente WHERE Numero_Expediente = @expediente';
+            const query = `SELECT * FROM Expediente
+                    WHERE Numero_Expediente = @expediente`;
+            const result = await pool.request()
+                .input('expediente', sql.NVarChar, expediente)
+                .query(query);
+      
+            return result.recordset[0];
+     }
+
+     static async getExpediente(expediente){
+            const pool = await getConnection();
+            const query = `SELECT *
+                    FROM Expediente as e
+                    INNER JOIN Motivo_Investigacion as mi ON mi.Id = e.Motivo_Investigacion_Id
+                    INNER JOIN Clase_Infraccion as ci ON ci.Id = e.Clase_Infraccion_Id
+                    WHERE Numero_Expediente = @expediente`;
             const result = await pool.request()
                 .input('expediente', sql.NVarChar, expediente)
                 .query(query);
@@ -1077,6 +1092,79 @@ export class ExpedienteModel {
             .input('No_Resolucion', sql.NVarChar, data.No_Resolucion)
             .input('Fecha_Resolucion', sql.DateTime, data.Fecha_Resolucion)
             .input('Fecha_Fecha_Notificacion', sql.DateTime, data.Fecha_Fecha_Notificacion)
+            .input('Usuario_Id', sql.Int, data.Usuario_Id)
+            .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
+            .query(query);
+
+        return result.rowsAffected[0] === 1;
+    }
+
+    static async buscarEstado(expediente){
+        const pool = await getConnection();
+        const query = `
+                SELECT e.Descripcion
+                FROM Estado as e
+                    INNER JOIN Expediente ON Expediente.Id = e.Expediente_Id
+                    WHERE Expediente.Numero_Expediente = @expediente`;
+        const result = await pool.request()
+            .input('expediente', sql.NVarChar, expediente)
+            .query(query);
+    
+        return result.recordset[0];
+    }
+
+    static async actualizarEstado(data){
+        const pool = await getConnection();
+
+        const query = `
+            UPDATE Estado
+            SET
+                Descripcion = @Descripcion
+                ,Usuario_Id = @Usuario_Id
+                ,Ultima_Modificacion = @Ultima_Modificacion
+            WHERE Expediente_Id = @Expediente_Id`;
+
+        const result = await pool.request()
+            .input('Expediente_Id', sql.Int, data.Expediente_Id)
+            .input('Descripcion', sql.NVarChar, data.Descripcion)
+            .input('Usuario_Id', sql.Int, data.Usuario_Id)
+            .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
+            .query(query);
+
+        return result.rowsAffected[0] === 1;
+    }
+
+    static async buscarAsignacion(expediente){
+        const pool = await getConnection();
+        const query = `
+                SELECT a.Nombre_Abogado
+                    ,a.Fecha_Asignacion
+                FROM Asignacion as a
+                    INNER JOIN Expediente ON Expediente.Id = a.Expediente_Id
+                    WHERE Expediente.Numero_Expediente = @expediente`;
+        const result = await pool.request()
+            .input('expediente', sql.NVarChar, expediente)
+            .query(query);
+    
+        return result.recordset[0];
+    }
+
+    static async actualizarAsignacion(data){
+        const pool = await getConnection();
+
+        const query = `
+            UPDATE Asignacion
+            SET
+                Nombre_Abogado = @Nombre_Abogado
+                ,Fecha_Asignacion = @Fecha_Asignacion
+                ,Usuario_Id = @Usuario_Id
+                ,Ultima_Modificacion = @Ultima_Modificacion
+            WHERE Expediente_Id = @Expediente_Id`;
+
+        const result = await pool.request()
+            .input('Expediente_Id', sql.Int, data.Expediente_Id)
+            .input('Nombre_Abogado', sql.NVarChar, data.Nombre_Abogado)
+            .input('Fecha_Asignacion', sql.DateTime, data.Fecha_Asignacion)
             .input('Usuario_Id', sql.Int, data.Usuario_Id)
             .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
             .query(query);
