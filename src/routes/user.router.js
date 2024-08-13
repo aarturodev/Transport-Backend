@@ -9,5 +9,6 @@ router.post('/login',UserController.login);
 router.post('/logout',UserController.logout);
 router.post('/register',UserController.register);
 router.get('/refresh',UserController.refreshToken);
+router.get('/users',UserController.getUsers);
 
 export default router;

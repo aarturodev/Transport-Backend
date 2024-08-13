@@ -6,5 +6,6 @@
      "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
      "terminal.integrated.confirmOnExit": "never",
      "terminal.integrated.fontSize": 24,
-     "terminal.integrated.fontFamily": ""
+     "terminal.integrated.fontFamily": "",
+     "oneDarkPro.vivid": true
 }

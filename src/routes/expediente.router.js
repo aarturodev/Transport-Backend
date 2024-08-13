@@ -22,6 +22,8 @@ router.get('/rec-queja-revocatoria', ExpedienteController.getRecQuejaRevocatoria
 router.get('/des-queja-revocatoria', ExpedienteController.getDecisionQuejaRevocatoria);
 router.get('/tipo-resolucion', ExpedienteController.getTipoResolucion);
 router.get('/ajuste-derecho-aclaratorio/:expediente', ExpedienteController.buscarAjusteDerAclaratorio);
+router.get('/tipo-estado', ExpedienteController.getTipoEstado);
+router.get('/nombre-abogado', ExpedienteController.getNombreAbogado);
 
 router.get('/:expediente', ExpedienteController.buscarExpediente); //buscar expediente por Numero de expediente
 router.get("/tabla/:expediente", ExpedienteController.getExpediente); //buscar estado de expediente por Numero de expediente

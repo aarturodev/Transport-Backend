@@ -80,6 +80,31 @@ export class ExpedienteController {
 
      }
 
+     static async getTipoEstado(req, res) {
+               
+               try{
+                    const result = await ExpedienteModel.getTipoEstado();
+                    res.json(result);
+               }
+               catch(error){
+                    console.error("este es el error: ",error);
+                    return res.status(500).json({ message: 'Internal server error' });
+               }
+     }
+
+     static async getNombreAbogado(req, res) {
+                    
+          try{
+               const result = await ExpedienteModel.getNombreAbogado();
+               res.json(result);
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+
+          }
+     }
+
      static async createExpediente(req, res) {
           try{
                console.log(req.body);
@@ -88,7 +113,7 @@ export class ExpedienteController {
                const exist = await ExpedienteModel.verificarExistencia(Numero_Expediente)
           
                if(exist){
-                    return res.json({message : 'El expediente ya existe'})
+                    return res.status(409).json({message : 'El expediente ya existe'})
                }
 
                const result = await ExpedienteModel.createExpediente(req.body);

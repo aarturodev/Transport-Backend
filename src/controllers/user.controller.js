@@ -1,5 +1,6 @@
 import { UserModel } from "../models/user.model.js";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 export class UserController {
 
@@ -41,10 +42,23 @@ export class UserController {
      }
 
      static async register(req, res) {
-          const { username, password } = req.body;
+          const { 
+               Primer_Nombre, 
+               Segundo_Nombre, 
+               Primer_Apellido,
+               Segundo_Apellido, 
+               Email, 
+               Clave, 
+               rol} = req.body;
 
           try{
-               const user = await UserModel.register(username, password);
+               const findUser = await UserModel.getUsuarioByEmail(Email);
+               if(findUser){
+                    return res.status(400).send({ message: 'User already exists' });
+               }
+               const hashedPassword = await bcrypt.hash(Clave, 10);
+               req.body.Clave = hashedPassword;
+               const user = await UserModel.register(req.body);
                if(!user){
                     return res.status(400).send({ message: 'User already exists' });
                }
@@ -77,6 +91,11 @@ export class UserController {
 
           
 
+     }
+
+     static async getUsers(req, res) {
+          const users = await UserModel.getUsers();
+          return res.json(users);
      }
      
 }

@@ -58,6 +58,14 @@ export class ExpedienteModel {
 
      }
 
+     static async getTipoEstado() {
+            
+            const pool = await getConnection();
+            const query = 'SELECT Id, Descripcion FROM Tipo_Estado';
+            const result = await pool.query(query);
+            return result.recordset;
+     }
+
      static async createExpediente(data) {
          const pool = await getConnection();
          const query = `
@@ -467,7 +475,8 @@ export class ExpedienteModel {
 
      static async buscarExpediente(expediente){
             const pool = await getConnection();
-            const query = `SELECT * FROM Expediente
+            const query = `SELECT *
+                    FROM Expediente as e
                     WHERE Numero_Expediente = @expediente`;
             const result = await pool.request()
                 .input('expediente', sql.NVarChar, expediente)
@@ -478,11 +487,90 @@ export class ExpedienteModel {
 
      static async getExpediente(expediente){
             const pool = await getConnection();
-            const query = `SELECT *
+            const query = `SELECT *,
+                        mi.Descripcion as Motivo_Investigacion,
+                        ci.Descripcion as Clase_Infraccion,
+                        ms.Descripcion as Modalidad_Servicio,
+                        ts.Descripcion as Tipo_Servicio,
+                        ss.Descripcion as Sujeto_Sancionable,
+                        tpn.Descripcion as Tipo_Persona_Natural,
+                        a.Numero_Resolucion as Numero_Resolucion_Apertura,
+                        a.Fecha_Resolucion as Fecha_Resolucion_Apertura,
+                        i.Numero_Resolucion as Numero_Resolucion_Inhibitorio,
+                        i.Fecha_Comunicacion as Fecha_Comunicacion_Inhibitorio,
+                        i.Fecha_Resolucion as Fecha_Resolucion_Inhibitorio,
+                        a.Fecha_Radicado as Fecha_Radicado_Apertura,
+                        a.Fecha_Notificacion as Fecha_Notificacion_Apertura,
+                        ac.Numero_Radicado as Numero_Radicado_Aceptacion_Cargos,
+                        ac.Fecha_Radicado as Fecha_Radicado_Aceptacion_Cargos,
+                        f.Numero_Resolucion as Numero_Resolucion_Fallo,
+                        f.Fecha_Resolucion as Fecha_Resolucion_Fallo,
+                        sf.Descripcion as Sentido_Fallo,
+                        f.Valor_Sancion as Valor_Sancion_Fallo,
+                        f.Fecha_Notificacion as Fecha_Notificacion_Fallo,
+                        f.Fecha_Max_Para_Recursos as Fecha_Max_Para_Recursos_Fallo,
+                        f.Numero_Radicado_Contra_Fallo as Numero_Radicado_Contra_Fallo_Fallo,
+                        f.Fecha_Radicado_Contra_Fallo as Fecha_Radicado_Contra_Fallo_Fallo,
+                        tr.Descripcion as Tipo_Recurso_Primera_Instancia,
+                        rpi.No_Resolucion_Recurso as No_Resolucion_Recurso_Primera_Instancia,
+                        rpi.Fecha_Resolucion as Fecha_Resolucion_Recurso_Primera_Instancia,
+                        rpi.Fecha_Notificacion as Fecha_Notificacion_Recurso_Primera_Instancia,
+                        d.Descripcion as Decision_Recurso_Primera_Instancia,
+                        rpi.Valor_Sancion_Modificado as Valor_Sancion_Modificado_Recurso_Primera_Instancia,
+                        rsi.Fecha_Envio_Segunda_Inst as Fecha_Envio_Segunda_Instancia,
+                        rsi.No_Memorando_Envio as No_Memorando_Envio_Segunda_Instancia,
+                        rsi.No_Resolucion_Recurso_Apelacion as No_Resolucion_Recurso_Apelacion_Segunda_Instancia,
+                        rsi.Fecha_Resolucion_Rec_Apel as Fecha_Resolucion_Rec_Apel_Segunda_Instancia,
+                        rsi.Fecha_Notificacion_Resolucion_Rec_Apel as Fecha_Notificacion_Resolucion_Rec_Apel_Segunda_Instancia,
+                        dsi.Descripcion as Decision_Segunda_Instancia,
+                        rsi.Fecha_Devolucion as Fecha_Devolucion_Segunda_Instancia,
+                        rsi.Valor_Sancion_Modificado as Valor_Sancion_Modificado_Segunda_Instancia,
+                        rsi.No_Resol_Silencio_Administrativo as No_Resol_Silencio_Administrativo_Segunda_Instancia,
+                        rqr.Descripcion as Recurso_Queja_Revocatoria,
+                        rrd.No_Radicado as No_Radicado_Rec_Queja_Revocatoria,
+                        rrd.Fecha_Radicado as Fecha_Radicado_Rec_Queja_Revocatoria,
+                        rrd.No_Resolucion as No_Resolucion_Rec_Queja_Revocatoria,
+                        rrd.Fecha_Resolucion as Fecha_Resolucion_Rec_Queja_Revocatoria,
+                        rrd.Fecha_Notificacion as Fecha_Notificacion_Rec_Queja_Revocatoria,
+                        dqr.Descripcion as Decision_Rec_Queja_Revocatoria,
+                        gc.Fecha_Envio as Fecha_Envio_Gestion_Cobro,
+                        trada.Descripcion as Tipo_Resolucion_Ajuste_Derecho_Aclaratorio,
+                        ada.No_Resolucion as No_Resolucion_Ajuste_Derecho_Aclaratorio,
+                        ada.Fecha_Resolucion as Fecha_Resolucion_Ajuste_Derecho_Aclaratorio,
+                        ada.Fecha_Fecha_Notificacion as Fecha_Notificacion_Ajuste_Derecho_Aclaratorio,
+                        tes.Descripcion as Tipo_Estado,
+                        asig.Fecha_Asignacion as Fecha_Asignacion_Asignacion
                     FROM Expediente as e
-                    INNER JOIN Motivo_Investigacion as mi ON mi.Id = e.Motivo_Investigacion_Id
-                    INNER JOIN Clase_Infraccion as ci ON ci.Id = e.Clase_Infraccion_Id
-                    WHERE Numero_Expediente = @expediente`;
+                    LEFT JOIN Motivo_Investigacion as mi ON mi.Id = e.Motivo_Investigacion_Id
+                    LEFT JOIN Clase_Infraccion as ci ON ci.Id = e.Clase_Infraccion_Id
+                    LEFT JOIN Modalidad_Servicio as ms ON ms.Id = e.Modalidad_Servicio_Id
+                    LEFT JOIN Tipo_Servicio as ts ON ts.Id = e.Tipo_Servicio_Id
+                    LEFT JOIN Sujeto_Sancionable as ss ON ss.Id = e.Sujeto_Sancionable_Id
+                    LEFT JOIN Tipo_Persona_Natural as tpn ON tpn.Id = e.Tipo_Persona_Natural_Id
+                    INNER JOIN Apertura as a ON a.Expediente_Id = e.Id
+                    INNER JOIN Inhibitorio as i ON i.Expediente_Id = e.Id
+                    INNER JOIN Pruebas as p ON p.Expediente_Id = e.Id
+                    INNER JOIN Aceptacion_Cargos as ac ON ac.Expediente_Id = e.Id
+                    INNER JOIN Fallo as f ON f.Expediente_Id = e.Id
+                    LEFT JOIN Sentido_Fallo as sf ON sf.Id = f.Sentido_Fallo_Id
+                    INNER JOIN Recurso_Primera_Instancia as rpi ON rpi.Expediente_Id = e.Id
+                    LEFT JOIN Tipo_Recurso as tr ON tr.Id = rpi.Tipo_Recurso_Id
+                    LEFT JOIN Decision as d ON d.Id = rpi.Decision_Id
+                    INNER JOIN Recurso_Segunda_Instancia as rsi ON rsi.Expediente_Id = e.Id
+                    LEFT JOIN Decision_Seg_Instatancia as dsi ON dsi.Id = rsi.Decision_Seg_Instatancia_Id
+                    INNER JOIN Recurso_Queja_Revoc_Directa as rrd ON rrd.Expediente_Id = e.Id
+                    LEFT JOIN Recurso_Queja_Revoc as rqr ON rqr.Id = rrd.Recurso_Queja_Revoc_Id
+                    LEFT JOIN Decision_Queja_Revoc as dqr ON dqr.Id = rrd.Decision_Queja_Revoc_Id
+                    INNER JOIN Ejecutoria as ej ON ej.Expediente_Id = e.Id
+                    INNER JOIN Gestion_Cobro as gc ON gc.Expediente_Id = e.Id
+                    INNER JOIN Ajuste_Derec_Aclarat as ada ON ada.Expediente_Id = e.Id
+                    LEFT JOIN Tipo_Resolucion as trada ON tr.Id = ada.Tipo_Resolucion_Id
+                    INNER JOIN Estado as es ON es.Expediente_Id = e.Id
+                    LEFT JOIN Tipo_Estado as tes ON tes.Id = es.Tipo_Estado_Id
+                    INNER JOIN Asignacion as asig ON asig.Expediente_Id = e.Id
+                    LEFT JOIN Abogado as ab ON ab.Id = asig.Nombre_Abogado_Id
+                    WHERE Numero_Expediente = @expediente;
+`;
             const result = await pool.request()
                 .input('expediente', sql.NVarChar, expediente)
                 .query(query);
@@ -514,16 +602,16 @@ export class ExpedienteModel {
             const result = await pool.request()
                 .input('Numero_Expediente', sql.NVarChar, data.Numero_Expediente)
                 .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
-                .input('Motivo_Investigacion_Id', sql.Int, data.Motivo_Investigacion_Id)
+                .input('Motivo_Investigacion_Id', sql.Int, data.Motivo_Investigacion_Id || null)
                 .input('Numero_Informe_Infraccion', sql.Int, data.Numero_Informe_Infraccion)
                 .input('Fecha_Hechos', sql.DateTime, data.Fecha_Hechos)
                 .input('Fecha_Caducidad', sql.DateTime, data.Fecha_Caducidad)
                 .input('Placa', sql.NVarChar, data.Placa)
-                .input('Clase_Infraccion_Id', sql.Int, data.Clase_Infraccion_Id)
-                .input('Modalidad_Servicio_Id', sql.Int, data.Modalidad_Servicio_Id)
-                .input('Tipo_Servicio_Id', sql.Int, data.Tipo_Servicio_Id)
-                .input('Sujeto_Sancionable_Id', sql.Int, data.Sujeto_Sancionable_Id)
-                .input('Tipo_Persona_Natural_Id', sql.Int, data.Tipo_Persona_Natural_Id)
+                .input('Clase_Infraccion_Id', sql.Int, data.Clase_Infraccion_Id || null)
+                .input('Modalidad_Servicio_Id', sql.Int, data.Modalidad_Servicio_Id || null)
+                .input('Tipo_Servicio_Id', sql.Int, data.Tipo_Servicio_Id || null)
+                .input('Sujeto_Sancionable_Id', sql.Int, data.Sujeto_Sancionable_Id || null)
+                .input('Tipo_Persona_Natural_Id', sql.Int, data.Tipo_Persona_Natural_Id || null)
                 .input('Identificacion', sql.Int, data.Identificacion)
                 .input('Nombre_Persona_Natural', sql.NVarChar, data.Nombre_Persona_Natural)
                 .input('Usuario_Id', sql.Int, data.Usuario_Id)
@@ -768,7 +856,7 @@ export class ExpedienteModel {
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
             .input('Numero_Resolucion', sql.NVarChar, data.Numero_Resolucion)
             .input('Fecha_Resolucion', sql.DateTime, data.Fecha_Resolucion)
-            .input('Sentido_Fallo_Id', sql.Int, data.Sentido_Fallo_Id)
+            .input('Sentido_Fallo_Id', sql.Int, data.Sentido_Fallo_Id || null)
             .input('Valor_Sancion', sql.Int, data.Valor_Sancion)
             .input('Fecha_Notificacion', sql.DateTime, data.Fecha_Notificacion)
             .input('Fecha_Max_Para_Recursos', sql.DateTime, data.Fecha_Max_Para_Recursos)
@@ -832,11 +920,11 @@ export class ExpedienteModel {
 
         const result = await pool.request()
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
-            .input('Tipo_Recurso_Id', sql.Int, data.Tipo_Recurso_Id)
+            .input('Tipo_Recurso_Id', sql.Int, data.Tipo_Recurso_Id || null)
             .input('No_Resolucion_Recurso', sql.NVarChar, data.No_Resolucion_Recurso)
             .input('Fecha_Resolucion', sql.DateTime, data.Fecha_Resolucion)
             .input('Fecha_Notificacion', sql.DateTime, data.Fecha_Notificacion)
-            .input('Decision_Id', sql.Int, data.Decision_Id)
+            .input('Decision_Id', sql.Int, data.Decision_Id || null)
             .input('Valor_Sancion_Modificado', sql.Int, data.Valor_Sancion_Modificado)
             .input('Usuario_Id', sql.Int, data.Usuario_Id)
             .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
@@ -900,7 +988,7 @@ export class ExpedienteModel {
             .input('No_Resolucion_Recurso_Apelacion', sql.NVarChar, data.No_Resolucion_Recurso_Apelacion)
             .input('Fecha_Resolucion_Rec_Apel', sql.DateTime, data.Fecha_Resolucion_Rec_Apel)
             .input('Fecha_Notificacion_Resolucion_Rec_Apel', sql.DateTime, data.Fecha_Notificacion_Resolucion_Rec_Apel)
-            .input('Decision_Seg_Instatancia_Id', sql.Int, data.Decision_Seg_Instatancia_Id)
+            .input('Decision_Seg_Instatancia_Id', sql.Int, data.Decision_Seg_Instatancia_Id || null)
             .input('Fecha_Devolucion', sql.DateTime, data.Fecha_Devolucion)
             .input('Valor_Sancion_Modificado', sql.Int, data.Valor_Sancion_Modificado)
             .input('No_Resol_Silencio_Administrativo', sql.NVarChar, data.No_Resol_Silencio_Administrativo)
@@ -964,13 +1052,13 @@ export class ExpedienteModel {
 
         const result = await pool.request()
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
-            .input('Recurso_Queja_Revoc_Id', sql.Int, data.Recurso_Queja_Revoc_Id)
+            .input('Recurso_Queja_Revoc_Id', sql.Int, data.Recurso_Queja_Revoc_Id || null)
             .input('No_Radicado', sql.NVarChar, data.No_Radicado)
             .input('Fecha_Radicado', sql.DateTime, data.Fecha_Radicado)
             .input('No_Resolucion', sql.NVarChar, data.No_Resolucion)
             .input('Fecha_Resolucion', sql.DateTime, data.Fecha_Resolucion)
             .input('Fecha_Notificacion', sql.DateTime, data.Fecha_Notificacion)
-            .input('Decision_Queja_Revoc_Id', sql.Int, data.Decision_Queja_Revoc_Id)
+            .input('Decision_Queja_Revoc_Id', sql.Int, data.Decision_Queja_Revoc_Id || null)
             .input('Usuario_Id', sql.Int, data.Usuario_Id)
             .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
             .query(query);
@@ -1088,7 +1176,7 @@ export class ExpedienteModel {
 
         const result = await pool.request()
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
-            .input('Tipo_Resolucion_Id', sql.Int, data.Tipo_Resolucion_Id)
+            .input('Tipo_Resolucion_Id', sql.Int, data.Tipo_Resolucion_Id || null)
             .input('No_Resolucion', sql.NVarChar, data.No_Resolucion)
             .input('Fecha_Resolucion', sql.DateTime, data.Fecha_Resolucion)
             .input('Fecha_Fecha_Notificacion', sql.DateTime, data.Fecha_Fecha_Notificacion)
@@ -1102,7 +1190,7 @@ export class ExpedienteModel {
     static async buscarEstado(expediente){
         const pool = await getConnection();
         const query = `
-                SELECT e.Descripcion
+                SELECT Tipo_Estado_Id
                 FROM Estado as e
                     INNER JOIN Expediente ON Expediente.Id = e.Expediente_Id
                     WHERE Expediente.Numero_Expediente = @expediente`;
@@ -1119,14 +1207,14 @@ export class ExpedienteModel {
         const query = `
             UPDATE Estado
             SET
-                Descripcion = @Descripcion
+                Tipo_Estado_Id = @Tipo_Estado_Id
                 ,Usuario_Id = @Usuario_Id
                 ,Ultima_Modificacion = @Ultima_Modificacion
             WHERE Expediente_Id = @Expediente_Id`;
 
         const result = await pool.request()
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
-            .input('Descripcion', sql.NVarChar, data.Descripcion)
+            .input('Tipo_Estado_Id', sql.Int, data.Tipo_Estado_Id)
             .input('Usuario_Id', sql.Int, data.Usuario_Id)
             .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
             .query(query);
@@ -1134,10 +1222,17 @@ export class ExpedienteModel {
         return result.rowsAffected[0] === 1;
     }
 
+    static async getNombreAbogado(){
+        const pool = await getConnection();
+        const query = 'SELECT Id, Nombre_Abogado FROM Abogado';
+        const result = await pool.query(query);
+        return result.recordset;
+    }
+
     static async buscarAsignacion(expediente){
         const pool = await getConnection();
         const query = `
-                SELECT a.Nombre_Abogado
+                SELECT a.Nombre_Abogado_Id
                     ,a.Fecha_Asignacion
                 FROM Asignacion as a
                     INNER JOIN Expediente ON Expediente.Id = a.Expediente_Id
@@ -1155,7 +1250,7 @@ export class ExpedienteModel {
         const query = `
             UPDATE Asignacion
             SET
-                Nombre_Abogado = @Nombre_Abogado
+                Nombre_Abogado_Id = @Nombre_Abogado_Id
                 ,Fecha_Asignacion = @Fecha_Asignacion
                 ,Usuario_Id = @Usuario_Id
                 ,Ultima_Modificacion = @Ultima_Modificacion
@@ -1163,7 +1258,7 @@ export class ExpedienteModel {
 
         const result = await pool.request()
             .input('Expediente_Id', sql.Int, data.Expediente_Id)
-            .input('Nombre_Abogado', sql.NVarChar, data.Nombre_Abogado)
+            .input('Nombre_Abogado_Id', sql.Int, data.Nombre_Abogado_Id)
             .input('Fecha_Asignacion', sql.DateTime, data.Fecha_Asignacion)
             .input('Usuario_Id', sql.Int, data.Usuario_Id)
             .input('Ultima_Modificacion', sql.DateTime, data.Ultima_Modificacion)
