@@ -1,10 +1,10 @@
 import mssql from 'mssql';
 
 const sqlConfig = {
-  user: "Anderson",
-  password: "administrador",
-  server: "ANDERSON-PC",
-  database: "T_Publico_Final",
+  user: process.env.DB_USER,
+  password: process.env.DB_PWD,
+  server: process.env.SERVER,
+  database: process.env.DB_NAME,
   pool: {
     max: 10,
     min: 0,
