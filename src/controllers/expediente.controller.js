@@ -92,6 +92,7 @@ export class ExpedienteController {
                }
      }
 
+
      static async getNombreAbogado(req, res) {
                     
           try{
@@ -633,6 +634,179 @@ export class ExpedienteController {
                     return res.status(404).json({ message: 'Asignacion no encontrada' });
                }
                return res.json({ message: 'Asignacion actualizada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarAutoAcumulacion(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarAutoAcumulacion(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Auto Acumulacion no encontrada' });
+               }
+               res.json({ message: 'Auto Acumulacion encontrada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarAutoAcumulacion(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarAutoAcumulacion(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Auto Acumulacion no encontrada' });
+               }
+               return res.json({ message: 'Auto Acumulacion actualizada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarPagoValor(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarPagoValor(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Pago Valor no encontrado' });
+               }
+               res.json({ message: 'Pago Valor encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarPagoValor(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarPagoValor(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Pago Valor no encontrado' });
+               }
+               return res.json({ message: 'Pago Valor actualizado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarSolicitudesEspeciales(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarSolicitudesEspeciales(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Solicitudes Especiales no encontrado' });
+               }
+               res.json({ message: 'Solicitudes Especiales encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarSolicitudesEspeciales(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarSolicitudesEspeciales(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Solicitudes Especiales no encontradas' });
+               }
+               return res.json({ message: 'Solicitudes Especiales actualizadas', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async getTipoUbicacion(req, res) {
+          try{
+               const result = await ExpedienteModel.getTipoUbicacion();
+               res.json(result);
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async buscarUbicacionExpediente(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarUbicacionExpediente(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Ubicacion Expediente no encontrada' });
+               }
+               res.json({ message: 'Ubicacion Expediente encontrada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarUbicacionExpediente(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarUbicacionExpediente(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Ubicacion Expediente no encontrada' });
+               }
+               return res.json({ message: 'Ubicacion Expediente actualizada', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+      static async getTipoEstadoFinal(req, res) {
+               
+               try{
+                    const result = await ExpedienteModel.getTipoEstadoFinal();
+                    res.json(result);
+               }
+               catch(error){
+                    console.error("este es el error: ",error);
+                    return res.status(500).json({ message: 'Internal server error' });
+               }
+     }
+
+      static async buscarEstadoFinal(req, res) {
+          try{
+               console.log(req.params.expediente );
+               const result = await ExpedienteModel.buscarEstadoFinal(req.params.expediente);
+               if(!result){
+                    return res.status(404).json({ message: 'Estado no encontrado' });
+               }
+               res.json({ message: 'Estado encontrado', result });
+          }
+          catch(error){
+               console.error("este es el error: ",error);
+               return res.status(500).json({ message: 'Internal server error' });
+          }
+     }
+
+     static async actualizarEstadoFinal(req, res) {
+          try{
+               console.log(req.body);
+               const result = await ExpedienteModel.actualizarEstadoFinal(req.body);
+               if(!result){
+                    return res.status(404).json({ message: 'Estado no encontrado' });
+               }
+               return res.json({ message: 'Estado actualizado', result });
           }
           catch(error){
                console.error("este es el error: ",error);

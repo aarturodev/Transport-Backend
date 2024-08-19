@@ -6,7 +6,7 @@ import { verificarToken } from "../middlewares/verificarToken.middleware.js";
 const router = Router();
 
 
-router.get('/motivo-investigacion',verificarToken,ExpedienteController.getMotivoInvestigacion);
+router.get('/motivo-investigacion', verificarToken, ExpedienteController.getMotivoInvestigacion);
 router.get('/conducta', ExpedienteController.getConducta);
 router.get('/modalidad-servicio', ExpedienteController.getModalidadServicio);
 router.get('/tipo-servicio', ExpedienteController.getTipoServicio);
@@ -24,6 +24,12 @@ router.get('/tipo-resolucion', ExpedienteController.getTipoResolucion);
 router.get('/ajuste-derecho-aclaratorio/:expediente', ExpedienteController.buscarAjusteDerAclaratorio);
 router.get('/tipo-estado', ExpedienteController.getTipoEstado);
 router.get('/nombre-abogado', ExpedienteController.getNombreAbogado);
+router.get('/auto-acumulacion/:expediente', ExpedienteController.buscarAutoAcumulacion);
+router.get('/pago-valor/:expediente', ExpedienteController.buscarPagoValor);
+router.get('/solicitudes-especiales/:expediente', ExpedienteController.buscarSolicitudesEspeciales);
+router.get('/tipo-ubicacion', ExpedienteController.getTipoUbicacion);
+router.get('/ubicacion-expediente/:expediente', ExpedienteController.buscarUbicacionExpediente);
+router.get('/tipo-estado-final', ExpedienteController.getTipoEstadoFinal);
 
 router.get('/:expediente', ExpedienteController.buscarExpediente); //buscar expediente por Numero de expediente
 router.get("/tabla/:expediente", ExpedienteController.getExpediente); //buscar estado de expediente por Numero de expediente
@@ -37,6 +43,7 @@ router.get('/ejecutoria/:expediente', ExpedienteController.buscarEjecutoria);
 router.get('/gestion-cobro/:expediente', ExpedienteController.buscarGestionCobro);
 router.get('/estado/:expediente', ExpedienteController.buscarEstado);
 router.get('/asignacion/:expediente', ExpedienteController.buscarAsignacion);
+router.get('/estado-final/:expediente', ExpedienteController.buscarEstadoFinal);
 
 router.post('/crear-expediente', ExpedienteController.createExpediente); //crear expediente
 router.patch("/actualizar-expediente", ExpedienteController.actualizarExpediente); //actualizar expediente
@@ -53,5 +60,13 @@ router.patch("/actualizar-gestion-cobro", ExpedienteController.actualizarGestion
 router.patch("/actualizar-ajuste-derecho-aclaratorio", ExpedienteController.actualizarAjusteDerAclaratorio); //actualizar ajuste derecho aclaratorio
 router.patch("/actualizar-estado", ExpedienteController.actualizarEstado); //actualizar estado expediente
 router.patch("/actualizar-asignacion", ExpedienteController.actualizarAsignacion); //actualizar asignacion expediente
+router.patch("/actualizar-auto-acumulacion", ExpedienteController.actualizarAutoAcumulacion); //actualizar auto acumulacion expediente
+router.patch("/actualizar-pago-valor", ExpedienteController.actualizarPagoValor); //actualizar pago valor expediente
+router.patch("/actualizar-solicitudes-especiales", ExpedienteController.actualizarSolicitudesEspeciales); //actualizar solicitudes especiales expediente
+router.patch("/actualizar-ubicacion-expediente", ExpedienteController.actualizarUbicacionExpediente); //actualizar ubicacion expediente
+
+router.patch("/actualizar-estado-final", ExpedienteController.actualizarEstadoFinal); //actualizar estado final expediente
+
+
 
 export default router;
