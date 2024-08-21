@@ -627,7 +627,17 @@ export class ExpedienteModel {
                         ada.Fecha_Resolucion as Fecha_Resolucion_Ajuste_Derecho_Aclaratorio,
                         ada.Fecha_Fecha_Notificacion as Fecha_Notificacion_Ajuste_Derecho_Aclaratorio,
                         tes.Descripcion as Tipo_Estado,
-                        asig.Fecha_Asignacion as Fecha_Asignacion_Asignacion
+                        asig.Fecha_Asignacion as Fecha_Asignacion_Asignacion,
+                        aa.Numero_Exp_Acumulado as Numero_Exp_Acumulado_Auto_Acumulacion,
+                        aa.Numero_Resolucion as Numero_Resolucion_Auto_Acumulacion,
+                        aa.Fecha_Resolucion as Fecha_Resolucion_Auto_Acumulacion,
+                        aa.Fecha_Comunicacion as Fecha_Comunicacion_Auto_Acumulacion,
+                        pv.Recibo_Pago as Recibo_Pago_Pago_Valor,
+                        pv.Valor as Valor_Pago_Valor,
+                        se.Descripcion as Solicitudes_Especiales,
+                        ue.Fecha_Entrega as Fecha_Entrega_Ubicacion_Expediente,
+                        tu.Descripcion as Tipo_Ubicacion_Expediente,
+                        tef.Descripcion as Tipo_Estado_Final
                     FROM Expediente as e
                     LEFT JOIN Motivo_Investigacion as mi ON mi.Id = e.Motivo_Investigacion_Id
                     LEFT JOIN Clase_Infraccion as ci ON ci.Id = e.Clase_Infraccion_Id
@@ -657,6 +667,13 @@ export class ExpedienteModel {
                     LEFT JOIN Tipo_Estado as tes ON tes.Id = es.Tipo_Estado_Id
                     INNER JOIN Asignacion as asig ON asig.Expediente_Id = e.Id
                     LEFT JOIN Abogado as ab ON ab.Id = asig.Nombre_Abogado_Id
+                    INNER JOIN Auto_Acumulacion as aa ON aa.Expediente_Id = e.Id
+                    INNER JOIN Pago_Valor as pv ON pv.Expediente_Id = e.Id
+                    INNER JOIN Solicitudes_Especiales as se ON se.Expediente_Id = e.Id
+                    INNER JOIN Ubicacion_Expediente as ue ON ue.Expediente_Id = e.Id
+                    LEFT JOIN Tipo_Ubicacion as tu ON tu.Id = ue.Tipo_Ubicacion_Id
+                    INNER JOIN Estado_Final as ef ON ef.Expediente_Id = e.Id
+                    LEFT JOIN Tipo_Estado_Final as tef ON tef.Id = ef.Tipo_Estado_Final_Id
                     WHERE Numero_Expediente = @expediente;
 `;
             const result = await pool.request()
