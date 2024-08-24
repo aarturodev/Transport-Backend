@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import UserRoute from './src/routes/user.router.js';
 import ExpedienteRoute from './src/routes/expediente.router.js';
+import { verificarToken } from './src/middlewares/verificarToken.middleware.js';
 
 
 const app = express();
@@ -13,7 +14,7 @@ app.use(cookieParser());
 
 // rutas 
 app.use(UserRoute);
-app.use('/expediente', ExpedienteRoute);
+app.use('/expediente',verificarToken, ExpedienteRoute);
 
 
 
