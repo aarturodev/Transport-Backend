@@ -14,8 +14,12 @@
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "docx-templates": "^4.13.0",
     "express": "^4.19.2",
+    "fs-extra": "^11.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mssql": "^11.0.1"
+    "libreoffice-convert": "^1.6.0",
+    "mssql": "^11.0.1",
+    "pdfkit": "^0.15.0"
   }
 }

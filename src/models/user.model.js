@@ -1,4 +1,4 @@
-import { getConnection, mssql as sql  } from '../../config/conexion.js';
+import { getConnection, mssql as sql  } from '../config/conexion.js';
 
 export class UserModel {
 

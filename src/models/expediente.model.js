@@ -1,4 +1,4 @@
-import { getConnection, mssql as sql } from '../../config/conexion.js';
+import { getConnection, mssql as sql } from '../config/conexion.js';
 
 export class ExpedienteModel {
 
@@ -56,6 +56,15 @@ export class ExpedienteModel {
         const result = await pool.query(query);
         return result.recordset;
 
+     }
+
+     static async getEstadoById(id) {
+        const pool = await getConnection();
+        const query = 'SELECT Id, Descripcion as estadoFind FROM Tipo_Estado WHERE Id = @id';
+        const result = await pool.request()
+            .input('id', sql.Int, id)
+            .query(query);
+        return result.recordset[0];
      }
 
      static async getTipoEstado() {
@@ -1533,6 +1542,16 @@ export class ExpedienteModel {
 
         return result.rowsAffected[0] === 1;
     }
+
+    static async getEstadoFinalById(id) {
+        const pool = await getConnection();
+        const query = 'SELECT Id, Descripcion as estadoFinalFind FROM Tipo_Estado_Final WHERE Id = @id';
+        const result = await pool.request()
+            .input('id', sql.Int, id)
+            .query(query);
+        return result.recordset[0];
+     }
+
 
     
      static async getTipoEstadoFinal() {
