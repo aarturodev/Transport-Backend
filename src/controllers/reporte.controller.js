@@ -4,14 +4,37 @@ import path from "path";
 import { fileURLToPath } from "url"; // Necesario para convertir `import.meta.url` a rutas de archivo
 import { ReporteModel } from "../models/reporte.model.js";
 import { ExpedienteModel } from "../models/expediente.model.js";
-import { log } from "console";
+import { log, table } from "console";
 
 export class ReporteController {
+  static Normalizar(data) {
+  const esArray = Array.isArray(data.iuit);
+
+  if (esArray) {
+    return data.iuit.map((_, index) => ({
+      iuit: data.iuit[index],
+      resolucion: data.resolucion[index],
+      placa: Array.isArray(data.placa) ? data.placa[0]: data.placa,  // Concatenar placas en un string
+      estado: data.estado[index],
+      expediente: data.expediente[index],
+    }));
+  } else {
+    return [{
+      iuit: data.iuit,
+      resolucion: data.resolucion,
+      placa: Array.isArray(data.placa) ? data.placa : data.placa,  // Concatenar placas en un string
+      estado: data.estado,
+      expediente: data.expediente,
+    }];
+  }
+}
+
+
   static async getReporte(req, res) {
     try {
-      const { expediente, estado, sujeto } = req.query;
-      console.log("expediente: ", req.query);
+      const { expediente, estado, sujeto, iuit, resolucion, placa } = req.query;
 
+      console.log( req.query);
       const __filename = fileURLToPath(import.meta.url);
       const __dirname = path.dirname(__filename);
 
@@ -21,23 +44,25 @@ export class ReporteController {
       // Leer el archivo de la plantilla .docx
       const pathTemplate = await fs.readFile(path.join(root, "template.docx"));
 
-      const dataExpediente = await ExpedienteModel.buscarExpediente(expediente);
-      console.log("data expediente: ",dataExpediente);
+      
+      const tabla = ReporteController.Normalizar(req.query);
+      console.log("tablas Normalizada: ",tabla);
+
       const data = {
-        nombre: sujeto,
-        fecha: new Date().toLocaleDateString(),
-        asunto:  `Paz y Salvo del expediente ${dataExpediente.Numero_Expediente}`.toUpperCase(),
-        placa: dataExpediente.Placa,
-        iuit: dataExpediente.Numero_Informe_Infraccion,
-        fecha_hechos: dataExpediente.Fecha_Hechos.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
-        estado: estado,
+        fecha: new Date().toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        table: tabla,
       };
 
       // Generar el reporte en formato DOCX
       const buffer = await createReport({
         template: pathTemplate,
         data: data,
-
+        cmdDelimiter: ["+++", "+++"],
+        
       });
 
       // Definir el nombre y la ruta del archivo DOCX que se generará
@@ -47,10 +72,7 @@ export class ReporteController {
       await fs.writeFile(pathReport, buffer);
 
       // Configurar encabezados para descargar el archivo como un attachment
-      res.setHeader(
-        "Content-Disposition",
-        "attachment; filename=report.docx"
-      );
+      res.setHeader("Content-Disposition", "attachment; filename=report.docx");
       res.setHeader(
         "Content-Type",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -71,56 +93,69 @@ export class ReporteController {
     }
   }
 
-
   static async verificarReporte(req, res) {
     const data = req.body;
 
-    if(!data){
+    if (!data) {
       res.json({ success: false, message: "No se recibió información." });
       return;
     }
     switch (data.TipoBusqueda) {
-      case "Placa": {
-        const result = await ReporteModel.verificarPlaca(data.Numero_Busqueda);
-        console.log(result);
-        if(result.success === null){
-          res.json({result});
-          return;
-        }
+      case "Placa":
+        {
+          const result = await ReporteModel.verificarPlaca(
+            data.Numero_Busqueda
+          );
 
-        const verificacion = await ReporteModel.verificarSujetoNit(data.Nit_Solicitante, data.Nombre_Solicitante)
-        console.log(verificacion);
-        res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
-        
-        
-      }
-      break;
-      case "IUIT": {
-         const result = await ReporteModel.verificarIUIT(data.Numero_Busqueda);
-        console.log(result);
-        if(result.success === null){
-          res.json({result});
-          return;
-        }
+          if (result.success === null) {
+            res.json({ result });
+            return;
+          }
 
-        const verificacion = await ReporteModel.verificarSujetoNit(data.Nit_Solicitante, data.Nombre_Solicitante)
-        console.log(verificacion);
-        res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
-      }
-      break;
-      case "Numero_Resolucion": {
-        const result = await ReporteModel.verificarNumeroResolucion(data.Numero_Busqueda);
-        console.log(result);
-        if(result.success === null){
-          res.json({result});
-          return;
-        }
+          const verificacion = await ReporteModel.verificarSujetoNit(
+            data.Nit_Solicitante,
+            data.Nombre_Solicitante
+          );
 
-        const verificacion = await ReporteModel.verificarSujetoNit(data.Nit_Solicitante, data.Nombre_Solicitante)
-        console.log(verificacion);
-        res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
-      }
-      break;
+          res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
+        }
+        break;
+      case "IUIT":
+        {
+          const result = await ReporteModel.verificarIUIT(data.Numero_Busqueda);
+          console.log(result);
+          if (result.success === null) {
+            res.json({ result });
+            return;
+          }
+
+          const verificacion = await ReporteModel.verificarSujetoNit(
+            data.Nit_Solicitante,
+            data.Nombre_Solicitante
+          );
+          console.log(verificacion);
+          res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
+        }
+        break;
+      case "Numero_Resolucion":
+        {
+          const result = await ReporteModel.verificarNumeroResolucion(
+            data.Numero_Busqueda
+          );
+          console.log(result);
+          if (result.success === null) {
+            res.json({ result });
+            return;
+          }
+
+          const verificacion = await ReporteModel.verificarSujetoNit(
+            data.Nit_Solicitante,
+            data.Nombre_Solicitante
+          );
+          console.log(verificacion);
+          res.json({ result, verificacion, sujeto: data.Nombre_Solicitante });
+        }
+        break;
     }
   }
 }

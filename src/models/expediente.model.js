@@ -574,6 +574,7 @@ export class ExpedienteModel {
             const pool = await getConnection();
             const query = `SELECT *
                     FROM Expediente as e
+                    INNER JOIN Apertura as a ON a.Expediente_Id = e.Id
                     WHERE Numero_Expediente = @expediente`;
             const result = await pool.request()
                 .input('expediente', sql.NVarChar, expediente)
